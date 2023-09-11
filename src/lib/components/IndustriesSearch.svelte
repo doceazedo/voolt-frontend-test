@@ -1,16 +1,84 @@
 <script lang="ts">
+	import { INDUSTRIES, SELECTED_INDUSTRY } from '$lib/stores/industries';
 	import ChevronDownIcon from './icons/ChevronDownIcon.svelte';
 	import SearchIcon from './icons/SearchIcon.svelte';
+
+	type SearchableItem = {
+		id: number;
+		tag: string;
+	};
+
+	let el: HTMLElement;
+	let value = '';
+	let showResults = false;
+	let searchableItems = new Set<SearchableItem>();
+
+	const search = (query: string) => {
+		if (!query.length) return new Set($INDUSTRIES?.map((x) => x.id) || []);
+
+		let matches = new Set<number>();
+		query = query.toLowerCase();
+		searchableItems.forEach((item) => {
+			if (item.tag.includes(query)) {
+				matches.add(item.id);
+			}
+		});
+		return matches;
+	};
+
+	const pickIndustry = (id: number) => {
+		$SELECTED_INDUSTRY = id;
+		showResults = false;
+	};
+
+	// when INDUSTRIES is updated, set options
+	INDUSTRIES.subscribe((industries) => {
+		if (!industries) return;
+		industries.forEach((industry) => {
+			// searchable by industry name
+			searchableItems.add({ id: industry.id, tag: industry.name.toLowerCase() });
+			// searchable by synonyms
+			industry.synonyms.forEach((synonym) => {
+				searchableItems.add({ id: industry.id, tag: synonym.toLowerCase() });
+			});
+			// searchable by services
+			industry.services.forEach((service) => {
+				searchableItems.add({ id: industry.id, tag: service.name.toLowerCase() });
+			});
+		});
+	});
+
+	SELECTED_INDUSTRY.subscribe((selected) => {
+		value = $INDUSTRIES?.find((x) => x.id == $SELECTED_INDUSTRY)?.name || '';
+	});
 </script>
 
-<div class="search-input">
+<div
+	class="search-input"
+	bind:this={el}
+	on:focusin={() => (showResults = true)}
+	on:focusout={() => (showResults = false)}
+>
 	<span class="icon is-left">
 		<SearchIcon />
 	</span>
-	<input type="text" placeholder="Search for your industry" />
+	<input type="text" placeholder="Search for your industry" bind:value />
 	<span class="icon is-right">
 		<ChevronDownIcon />
 	</span>
+
+	<div class="search-results" class:show={showResults}>
+		<div class="options">
+			{#each search(value) as item}
+				{@const industry = $INDUSTRIES.find((x) => x.id == item)}
+				{#if industry}
+					<button class="option" on:click={() => pickIndustry(industry.id)}>
+						{industry.name}
+					</button>
+				{/if}
+			{/each}
+		</div>
+	</div>
 </div>
 
 <style>
@@ -64,5 +132,71 @@
 	.icon :global(svg) {
 		width: 1.25rem;
 		height: 1.25rem;
+	}
+
+	.search-results {
+		position: absolute;
+		top: 50px;
+		left: 0;
+		width: 100%;
+		height: 16rem;
+		padding: 0.25rem;
+		background-color: #fff;
+		border-radius: 0.25rem;
+		border: 1px solid var(--grey-30);
+		box-shadow: -10px 4px 24px 0px hsla(0, 0%, 0%, 0.08);
+		transform-origin: top center;
+		transition: all 0.2s ease;
+	}
+
+	.search-results:not(.show) {
+		opacity: 0;
+		transform: translateY(-8px) scale(0.9);
+		pointer-events: none;
+	}
+
+	.options {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		width: 100%;
+		height: 100%;
+		padding-right: 0.25rem;
+		overflow-y: scroll;
+	}
+
+	/* width */
+	.options::-webkit-scrollbar {
+		width: 0.25rem;
+	}
+
+	/* Track */
+	.options::-webkit-scrollbar-track {
+		background: var(--white);
+	}
+
+	/* Handle */
+	.options::-webkit-scrollbar-thumb {
+		background: var(--grey-50);
+		border-radius: 0.25rem;
+	}
+
+	/* Handle on hover */
+	.options::-webkit-scrollbar-thumb:hover {
+		background: var(--grey-60);
+	}
+
+	.option {
+		text-align: left;
+		font-size: 0.875rem;
+		padding: 0.625rem 0.75rem;
+		border: none;
+		border-radius: 0.25rem;
+		background-color: transparent;
+		cursor: pointer;
+	}
+
+	.option:hover {
+		background-color: var(--grey-10);
 	}
 </style>

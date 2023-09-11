@@ -1,29 +1,21 @@
 <script lang="ts">
-	const placeholderOptions = [
-		'Accounting',
-		'Appliance Installation',
-		'Architectural services',
-		'Barber',
-		'Bricklayer',
-		'Electrician',
-		'Event Planning',
-		'Excavation Contractor',
-		'Exterior Cleaner',
-		'Car Detailing',
-		'Carpenter',
-		'BBQ Cleaning',
-		'Flooring Contractor',
-		'Food Services',
-		'Foundation Contractor',
-		'Garage Door Contractor',
-		'General Contractor'
-	];
+	import { INDUSTRIES, SELECTED_INDUSTRY } from '$lib/stores/industries';
+
+	$: popularOptions = $INDUSTRIES?.filter((x) => x.isPopular) || [];
+
+	const pickIndustry = (id: number) => ($SELECTED_INDUSTRY = id);
 </script>
 
 <h2 class="title">Or select from the most popular:</h2>
 <div class="options">
-	{#each placeholderOptions as label, i}
-		<button class="option" class:is-active={i == 9}>{label}</button>
+	{#each popularOptions as option}
+		<button
+			class="option"
+			on:click={() => pickIndustry(option.id)}
+			class:is-active={option.id == $SELECTED_INDUSTRY}
+		>
+			{option.name}
+		</button>
 	{/each}
 </div>
 

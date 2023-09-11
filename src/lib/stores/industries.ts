@@ -30,3 +30,5 @@ const getIndustries = async () => {
 export const INDUSTRIES = writable<IndustriesResponse>(undefined, () => {
 	getIndustries();
 });
+
+export const SELECTED_INDUSTRY = writable(0);
