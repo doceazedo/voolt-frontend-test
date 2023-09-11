@@ -19,8 +19,7 @@
 	}
 
 	.highlight {
-		max-width: 52.5rem;
-		width: 100%;
+		width: 50%;
 		height: 100%;
 		flex-shrink: 0;
 		background-image: url('/images/app-demo.webp');
@@ -36,6 +35,10 @@
 	}
 
 	.main .content {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-start;
 		max-width: 40rem;
 		width: 100%;
 		height: 100%;

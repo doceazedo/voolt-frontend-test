@@ -1,0 +1,20 @@
+<script>
+	import PopularOptions from './PopularOptions.svelte';
+	import IndustriesSearch from './IndustriesSearch.svelte';
+</script>
+
+<div class="form">
+	<h1 class="title">What type of business is the website for?</h1>
+	<IndustriesSearch />
+	<PopularOptions />
+</div>
+
+<style>
+	.title {
+		max-width: 26.25rem;
+		margin-bottom: 2.5rem;
+		font-size: 2rem;
+		font-weight: 700;
+		line-height: 42px;
+	}
+</style>
