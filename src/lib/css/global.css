@@ -1,3 +1,17 @@
+:root {
+  --blue-primary: hsla(235, 100%, 63%, 1);
+  --blue-10: hsla(222, 96%, 96%, 1);
+  --white: hsla(0, 0%, 100%, 1);
+  --grey-30: hsla(216, 8%, 93%, 1);
+  --grey-40: hsla(216, 8%, 86%, 1);
+  --grey-60: hsla(216, 6%, 58%, 1);
+  --grey-100: hsla(220, 4%, 13%, 1);
+}
+
+body {
+  color: var(--grey-100)
+}
+
 body,
 button,
 input {
