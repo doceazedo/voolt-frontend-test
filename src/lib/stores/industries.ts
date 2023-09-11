@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { toast } from '$lib/utils/toast';
 
 type IndustriesResponse = {
 	id: number;
@@ -22,8 +23,11 @@ const getIndustries = async () => {
 		if (!resp.ok) throw Error(`${resp.status} ${resp.statusText}`);
 		const data = await resp.json();
 		INDUSTRIES.set(data);
-	} catch (error) {
-		// TODO: handle errors
+	} catch (error: any) {
+		// if the API error messages are known, we could use them here
+		// for now, let's just show a nice message and  print the error
+		toast.error('Oops... Something went wrong! Please try again later.');
+		console.error(error);
 	}
 };
 

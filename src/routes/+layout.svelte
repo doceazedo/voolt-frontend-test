@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Toaster } from 'svelte-french-toast';
 	import '$lib/css/minireset.min.css';
 	import '$lib/css/global.css';
 </script>
@@ -11,6 +12,8 @@
 		</div>
 	</main>
 </div>
+
+<Toaster />
 
 <style>
 	.section {

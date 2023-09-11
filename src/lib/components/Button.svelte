@@ -3,7 +3,7 @@
 	export let disabled = false;
 </script>
 
-<button class="button" class:is-primary={variant == 'primary'} {disabled}>
+<button on:click class="button" class:is-primary={variant == 'primary'} {disabled}>
 	<slot />
 </button>
 
