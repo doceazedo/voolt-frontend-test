@@ -12,7 +12,11 @@
 	export let options: Set<Option> = new Set();
 	export let placeholder = '';
 
-	$: optionsMap = options && new Map([...options].map((x) => [x.value, x.label]));
+	$: optionsMap =
+		options &&
+		new Map(
+			[...options].sort((a, b) => a.label.localeCompare(b.label)).map((x) => [x.value, x.label])
+		);
 	$: results = options && search(inputValue);
 
 	let showResults = false;
@@ -27,7 +31,20 @@
 				matches.set(option.value, option.label);
 			}
 		});
-		return matches;
+
+		const sortedMatches = [...matches.entries()].sort((a, b) => {
+			const aValue = a[1].toLowerCase();
+			const bValue = b[1].toLowerCase();
+
+			if (aValue.startsWith(query) && !bValue.startsWith(query)) {
+				return -1;
+			} else if (!aValue.startsWith(query) && bValue.startsWith(query)) {
+				return 1;
+			}
+
+			return aValue.localeCompare(bValue);
+		});
+		return new Map(sortedMatches);
 	};
 
 	const pickItem = (value: number, label: string) => {
