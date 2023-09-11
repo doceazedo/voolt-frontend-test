@@ -3,6 +3,7 @@
 	import ChevronDownIcon from './icons/ChevronDownIcon.svelte';
 	import SearchIcon from './icons/SearchIcon.svelte';
 	import type { Option } from '$lib/types';
+	import EmptyResults from './EmptyResults.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -11,6 +12,7 @@
 	export let placeholder = '';
 
 	$: optionsMap = options && new Map([...options].map((x) => [x.value, x.label]));
+	$: results = options && search(inputValue);
 
 	let showResults = false;
 
@@ -53,11 +55,14 @@
 
 	<div class="search-results" class:show={showResults}>
 		<div class="options">
-			{#each options && search(inputValue) as [value, label]}
+			{#each results as [value, label]}
 				<button class="option" on:click={() => pickItem(value, label)}>
 					{label}
 				</button>
 			{/each}
+			{#if !results.size}
+				<EmptyResults />
+			{/if}
 		</div>
 	</div>
 </div>
@@ -120,7 +125,6 @@
 		top: 50px;
 		left: 0;
 		width: 100%;
-		height: 16rem;
 		padding: 0.25rem;
 		background-color: #fff;
 		border-radius: 0.25rem;
@@ -141,7 +145,8 @@
 		flex-direction: column;
 		gap: 2px;
 		width: 100%;
-		height: 100%;
+		max-height: 15.25rem;
+		height: max-content;
 		padding-right: 0.25rem;
 		overflow-y: scroll;
 	}
