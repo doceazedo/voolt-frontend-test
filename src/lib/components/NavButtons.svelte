@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SELECTED_INDUSTRY } from '$lib/stores/industries';
 	import Button from './Button.svelte';
 	import ChevronLeftIcon from './icons/ChevronLeftIcon.svelte';
 </script>
@@ -8,7 +9,7 @@
 		<ChevronLeftIcon />
 		Back
 	</Button>
-	<Button variant="primary">Continue</Button>
+	<Button variant="primary" disabled={!$SELECTED_INDUSTRY}>Continue</Button>
 </nav>
 
 <style>

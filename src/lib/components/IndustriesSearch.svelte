@@ -8,7 +8,6 @@
 		tag: string;
 	};
 
-	let el: HTMLElement;
 	let value = '';
 	let showResults = false;
 	let searchableItems = new Set<SearchableItem>();
@@ -31,6 +30,13 @@
 		showResults = false;
 	};
 
+	const unpickIndustry = () => {
+		if (!$SELECTED_INDUSTRY) return;
+		if (value != $INDUSTRIES.find((x) => x.id == $SELECTED_INDUSTRY)?.name) {
+			$SELECTED_INDUSTRY = 0;
+		}
+	};
+
 	// when INDUSTRIES is updated, set options
 	INDUSTRIES.subscribe((industries) => {
 		if (!industries) return;
@@ -49,13 +55,15 @@
 	});
 
 	SELECTED_INDUSTRY.subscribe((selected) => {
+		if (!$SELECTED_INDUSTRY) return;
 		value = $INDUSTRIES?.find((x) => x.id == $SELECTED_INDUSTRY)?.name || '';
 	});
+
+	$: value, unpickIndustry();
 </script>
 
 <div
 	class="search-input"
-	bind:this={el}
 	on:focusin={() => (showResults = true)}
 	on:focusout={() => (showResults = false)}
 >
