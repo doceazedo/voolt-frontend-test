@@ -8,6 +8,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let inputValue: string = '';
+	export let selected = 0;
 	export let options: Set<Option> = new Set();
 	export let placeholder = '';
 
@@ -30,8 +31,10 @@
 	};
 
 	const pickItem = (value: number, label: string) => {
+		selected = value;
 		inputValue = label;
 		showResults = false;
+
 		dispatch('change', {
 			value
 		});

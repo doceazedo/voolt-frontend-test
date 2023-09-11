@@ -1,9 +1,23 @@
 <script lang="ts">
-	import { INDUSTRIES } from '$lib/stores/industries';
+	import { INDUSTRIES, SELECTED_INDUSTRY } from '$lib/stores/industries';
 	import SearchInput from './SearchInput.svelte';
 	import type { Option } from '$lib/types';
 
 	let options = new Set<Option>();
+	let query = '';
+	let value = 0;
+
+	const onPickIndustry = (event: CustomEvent<{ value: number }>) => {
+		$SELECTED_INDUSTRY = event.detail.value;
+	};
+
+	const unpickIndustry = () => {
+		if (!$SELECTED_INDUSTRY) return;
+		if ($INDUSTRIES.find((x) => x.id == $SELECTED_INDUSTRY)?.name != query) {
+			$SELECTED_INDUSTRY = 0;
+		}
+	};
+	$: query, unpickIndustry();
 
 	INDUSTRIES.subscribe((industries) => {
 		if (!industries) return;
@@ -19,10 +33,17 @@
 		});
 		options = options;
 	});
+
+	SELECTED_INDUSTRY.subscribe((selectedIndustry) => {
+		if (!selectedIndustry) return;
+		query = $INDUSTRIES.find((x) => x.id == selectedIndustry)?.name || query;
+	});
 </script>
 
 <SearchInput
 	{options}
+	bind:inputValue={query}
+	bind:selected={value}
 	placeholder="Search for your industry"
-	on:change={(ev) => console.log(ev.detail.value)}
+	on:change={onPickIndustry}
 />
