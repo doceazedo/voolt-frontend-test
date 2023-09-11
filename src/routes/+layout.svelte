@@ -47,4 +47,40 @@
 		height: 100%;
 		padding: 2.25rem 0 5rem;
 	}
+
+	@media screen and (max-width: 1366px) {
+		.highlight {
+			width: unset;
+			flex-grow: 1;
+		}
+
+		.main {
+			width: min-content;
+			flex-shrink: 0;
+			padding: 2.25rem;
+		}
+
+		.main .content {
+			padding: 2.25rem 0;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		.section {
+			height: unset;
+		}
+
+		.highlight {
+			display: none;
+		}
+
+		.main {
+			padding: 1.5rem;
+		}
+
+		.main .content {
+			padding: 0;
+			gap: 1.5rem;
+		}
+	}
 </style>
